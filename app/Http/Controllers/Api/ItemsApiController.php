@@ -19,7 +19,7 @@ class ItemsApiController extends Controller
 {
     public function index(ItemsIndexRequest $request): AnonymousResourceCollection
     {
-        return ItemsResource::collection(Item::filter($request->validated())->paginate(1));
+        return ItemsResource::collection(Item::filter($request->validated())->paginate());
     }
 
     public function rating(): AnonymousResourceCollection

@@ -15,7 +15,7 @@ class ItemsIndexRequest extends FormRequest
     {
         return [
             'search' => 'sometimes|string|nullable|max:100',
-            'category' => 'sometimes|string|exists:categories,slug',
+            'category' => 'sometimes|string|exists:categories,id',
         ];
     }
 }
