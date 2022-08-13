@@ -40,7 +40,7 @@ class ItemsApiController extends Controller
         );
     }
 
-    public function show(Request $request, Item $item): ItemsResource
+    public function show(Request $request, Item $item): array
     {
         RatingItemEvent::dispatch($item->getKey());
 

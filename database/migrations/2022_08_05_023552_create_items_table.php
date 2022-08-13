@@ -12,7 +12,7 @@ return new class() extends Migration {
             $table->string('name', 100);
             $table->string('brand', 100);
             $table->string('city', 60);
-            $table->string('slug', 255);
+            $table->string('slug', 255)->unique();
             $table->string('tumpnail')->nullable();
             $table->integer('stock');
             $table->string('currency', 3);
