@@ -17,6 +17,7 @@ class ItemResource extends JsonResource
             'tumpnail' => config('filesystems.disks.s3.statics') . '/' . $this->tumpnail,
             'currency' => $this->currency,
             'discount' => $this->discount,
+            'count_views' => $this->rating_items()->count(),
             'description' => $this->description,
             'stock' => $this->stock,
             'category_name' => $this->category->name,
@@ -27,6 +28,7 @@ class ItemResource extends JsonResource
             'createdAt' => $this->created_at->format('Y-m-d h:m:s'),
             'updatedAt' => $this->updated_at->format('Y-m-d h:m:s'),
             'images' => $this->images->map(fn ($image) => [
+                'id' => $image->getKey(),
                 'url' =>  config('filesystems.disks.s3.statics') . '/' . $image->url,
             ]),
         ];

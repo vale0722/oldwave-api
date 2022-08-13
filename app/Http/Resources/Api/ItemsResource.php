@@ -19,6 +19,7 @@ class ItemsResource extends JsonResource
             'discount' => $this->discount,
             'description' => $this->description,
             'stock' => $this->stock,
+            'count_views' => $this->rating_items()->count(),
             'category_name' => $this->category->name,
             'category_slug' => $this->category->slug,
             'seller' => $this->seller->name,
