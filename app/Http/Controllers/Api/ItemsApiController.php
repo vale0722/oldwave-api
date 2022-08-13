@@ -7,20 +7,19 @@ use App\Constants\Status;
 use App\Events\RatingItemEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Items\ItemsIndexRequest;
+use App\Http\Requests\Items\ItemsStoreRequest;
 use App\Http\Resources\Api\ItemResource;
 use App\Http\Resources\Api\ItemsResource;
 use App\Models\Item;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ItemsApiController extends Controller
 {
-    public function index(ItemsIndexRequest $request): array
+    public function index(ItemsIndexRequest $request): AnonymousResourceCollection
     {
-        return response()->api(
-            Status::OK,
-            ItemsResource::collection(Item::filter($request->validated())->paginate())->toArray($request)
-        );
+        return ItemsResource::collection(Item::filter($request->validated())->paginate(1));
     }
 
     public function rating(Request $request): array
@@ -31,7 +30,7 @@ class ItemsApiController extends Controller
         );
     }
 
-    public function store(Request $request, StoreOrUpdateItemAction $action): JsonResponse
+    public function store(ItemsStoreRequest $request, StoreOrUpdateItemAction $action)
     {
         $item = $action->setData($request->validated())->execute()->getModel();
 

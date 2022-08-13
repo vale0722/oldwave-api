@@ -18,11 +18,13 @@ class FilesHelper
     public static function resizeImg(string $path, File $file): string
     {
         $image = $file;
-        $img = Image::make($image->getPath());
+        $img = Image::make($image);
         $img->resize(100, 100, function ($constraint) {
             $constraint->aspectRatio();
-        });
+        })->encode($file->getMimeType(), 60);
 
-        return self::save($path, new File($img));
+        Storage::disk('s3')->put($path, $img->stream());
+
+        return $path . '/' . $file->getPathname();
     }
 }

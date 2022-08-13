@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 abstract class Action
 {
-    public ?Model $model;
+    public ?Model $model = null;
     public array $data;
 
     public function getModel(): ?Model

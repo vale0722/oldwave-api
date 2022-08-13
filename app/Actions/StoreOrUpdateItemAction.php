@@ -22,16 +22,17 @@ class StoreOrUpdateItemAction extends Action
         $this->model->city = $this->data['city'];
         $this->model->price = $this->data['price'];
         $this->model->currency = $this->data['currency'];
+        $this->model->description = $this->data['description'];
         $this->model->discount = $this->data['discount'];
         $this->model->stock = $this->data['stock'];
         $this->model->category_id = $this->data['category'];
         $this->model->seller_id = $this->data['seller'];
 
         /** @var array $images */
-        $images = Arr::has($this->data, 'images');
+        $images = Arr::get($this->data, 'images');
+
         /** @var File $image */
         $image = $images[0];
-
         $this->model->tumpnail = FilesHelper::resizeImg(
             'items/tumbnails/',
             $image
@@ -46,7 +47,6 @@ class StoreOrUpdateItemAction extends Action
             $modelImage->item_id = $this->model->getKey();
             $modelImage->save();
         }
-
         return $this;
     }
 }

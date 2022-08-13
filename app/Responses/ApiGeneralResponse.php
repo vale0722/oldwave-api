@@ -7,9 +7,9 @@ use Illuminate\Contracts\Support\Arrayable;
 class ApiGeneralResponse implements Arrayable
 {
     private string $status;
-    private array $data;
+    private $data;
 
-    public function __construct(string $status, ?array $data = [])
+    public function __construct(string $status, $data = [])
     {
         $this->status = $status;
         $this->data = $data;
