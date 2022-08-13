@@ -13,6 +13,6 @@ class Seller extends Model
 
     protected $fillable = [
         'name',
-        'logo'
+        'logo',
     ];
 }
