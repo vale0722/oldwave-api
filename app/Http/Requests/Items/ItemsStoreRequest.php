@@ -14,7 +14,7 @@ class ItemsStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'slug' => 'required|string|min:2|max:255',
+            'slug' => 'required|string|min:2|max:255|unique:items',
             'name' => 'required|string|min:3|max:100',
             'brand' => 'required|string|min:2|max:100',
             'tumpnail' => 'sometimes|required|string',
