@@ -6,8 +6,8 @@ on:
       - main
 
 env:
-  ECR_REPOSITORY_API:  ${{ secrets.ECR_REPOSITORY_API }}
-  ECR_REPOSITORY_NGNIX:  ${{ secrets.ECR_REPOSITORY_NGNIX }}
+  ECR_REPOSITORY_API: "oldwave_api"
+  ECR_REPOSITORY_NGNIX: "oldwave_nginx"
 
 jobs:
   deploy:
