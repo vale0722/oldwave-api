@@ -5,7 +5,7 @@ RUN docker-php-ext-configure opcache --enable-opcache && \
     docker-php-ext-install pdo pdo_mysql
 COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
-COPY ./* /var/www/html
+COPY ./ /var/www/html
 COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
 
 RUN php artisan config:cache && \
