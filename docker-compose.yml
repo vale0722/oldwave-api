@@ -4,6 +4,19 @@ volumes:
     app-data:
 
 services:
+    oldwave-nginx-container:
+        build:
+            context: .docker/nginx
+            dockerfile: Dockerfile
+        image: oldwave_nginx
+        container_name: oldwave-nginx-container
+        restart: unless-stopped
+        ports:
+            - "80:80"
+        volumes:
+            - ./:/var/www
+            - .docker/nginx:/etc/nginx/conf.d
+
     oldwave-api-container:
         build:
             context: .docker/php
