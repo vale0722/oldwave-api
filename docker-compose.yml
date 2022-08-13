@@ -7,12 +7,12 @@ volumes:
     app-data:
 
 services:
-    oldwave-nginx-container:
+    webserver:
         build:
             context: .docker/nginx
             dockerfile: Dockerfile
         image: oldwave_nginx
-        container_name: oldwave-nginx-container
+        container_name: webserver
         restart: unless-stopped
         ports:
             - "80:80"
@@ -22,12 +22,12 @@ services:
         networks:
             app-network:
 
-    oldwave-api-container:
+    backend:
         build:
             context: .docker/php
             dockerfile: dockerfile
         image: oldwave_api
-        container_name: oldwave-api-container
+        container_name: backend
         volumes:
             - ./:/var/www
             - .docker/php/php.ini:/usr/local/etc/php/conf.d/local.ini
