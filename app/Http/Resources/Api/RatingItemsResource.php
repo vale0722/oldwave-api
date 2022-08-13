@@ -4,7 +4,7 @@ namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RatingProductsResource extends JsonResource
+class RatingItemsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +16,9 @@ class RatingProductsResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'product_id' => $this->product_id,
+            'item_id' => $this->item_id,
             'createdAt' => $this->created_at->format('Y-m-d h:m:s'),
-            'updatedAt' => $this->updated_at->format('Y-m-d h:m:s')
+            'updatedAt' => $this->updated_at->format('Y-m-d h:m:s'),
         ];
     }
 }

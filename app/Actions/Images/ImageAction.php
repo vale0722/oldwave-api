@@ -8,6 +8,6 @@ class ImageAction
 {
     public function storeOrUpdate(array $data, Model $model = null): StoreOrUpdateImage
     {
-        return (new StoreOrUpdateImage($data,$model))->execute();
+        return (new StoreOrUpdateImage($data, $model))->execute();
     }
 }

@@ -15,9 +15,8 @@ class StoreOrUpdateSeller extends StoreOrUpdateModel
         $this->model = $this->model ?? new Seller();
         $this->model->name = $this->data['name'];
 
-        if (Arr::has($this->data, 'url'))
-        {
-            $file = FilesHelper::save('images', Arr::get($this->data,'logo'));
+        if (Arr::has($this->data, 'url')) {
+            $file = FilesHelper::save('images', Arr::get($this->data, 'logo'));
             $this->model->logo = $file;
         }
         $this->model->save();

@@ -13,11 +13,10 @@ class StoreOrUpdateImage extends StoreOrUpdateModel
     {
         /** @var Image model */
         $this->model = $this->model ?? new Image();
-        $this->model->product_id = $this->data['product_id'];
+        $this->model->item_id = $this->data['item_id'];
 
-        if (Arr::has($this->data, 'url'))
-        {
-            $file = FilesHelper::save('images', Arr::get($this->data,'url'));
+        if (Arr::has($this->data, 'url')) {
+            $file = FilesHelper::save('images', Arr::get($this->data, 'url'));
             $this->model->url = $file;
         }
         $this->model->save();

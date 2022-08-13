@@ -8,6 +8,6 @@ class SellerAction
 {
     public function storeOrUpdate(array $data, Model $model = null): StoreOrUpdateSeller
     {
-        return (new StoreOrUpdateSeller($data,$model))->execute();
+        return (new StoreOrUpdateSeller($data, $model))->execute();
     }
 }
