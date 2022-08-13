@@ -7,6 +7,7 @@ COPY opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 COPY ./ /var/www/html
 COPY 000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY .env /var/www/html/.env
 
 RUN php artisan config:cache && \
     php artisan route:cache && \
