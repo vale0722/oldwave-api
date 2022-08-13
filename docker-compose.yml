@@ -18,9 +18,11 @@ services:
             - "80:80"
         volumes:
             - ./:/var/www
-            - .docker/nginx:/etc/nginx/conf.d
+            - .docker/nginx/:/etc/nginx/conf.d
         networks:
             app-network:
+        depends_on:
+            - backend
 
     backend:
         build:
