@@ -27,6 +27,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 # Setup working directory
 WORKDIR /var/www/
+COPY php.ini /usr/local/etc/php/conf.d/local.ini
+COPY ./ /var/www
 
 # Create User and Group
 RUN groupadd -g 1000 ${GROUP} && useradd -u 1000 -ms /bin/bash -g ${GROUP} ${USER}
