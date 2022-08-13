@@ -1,0 +1,27 @@
+version: "3.8"
+
+networks:
+    app-network:
+
+services:
+    oldwave-nginx-container:
+        build:
+            context: .docker/nginx
+            dockerfile: Dockerfile
+        image: oldwave_nginx
+        container_name: oldwave-nginx-container
+        restart: unless-stopped
+        ports:
+            - "80:80"
+        networks:
+            app-network:
+
+    oldwave-api-container:
+        build:
+            context: .docker/php
+            dockerfile: dockerfile
+        image: oldwave_api
+        container_name: oldwave-api-container
+        restart: unless-stopped
+        networks:
+            app-network:

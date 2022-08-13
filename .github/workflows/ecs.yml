@@ -6,9 +6,9 @@ on:
       - main
 
 env:
-  ECR_REPOSITORY:  ${{ secrets.ECR_REPOSITORY }}
-  
-  
+  ECR_REPOSITORY_API: "oldwave_api"
+  ECR_REPOSITORY_NGNIX: "oldwave_nginx"
+
 jobs:
   deploy:
     name: Deploy
@@ -26,6 +26,25 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Cache PHP dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: dependencies-php-composer-${{ hashFiles('**/composer.lock') }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd
+          coverage: none
+
+      - name: Install dependencies
+        run: composer install --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+
+      - name: Copy dotenv file
+        run: php -r "file_put_contents(__DIR__ . '/.env', '${{ secrets.DOT_ENV }}');"
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@aaf69d68aa3fb14c1d5a6be9ac61fe15b48453a2
@@ -36,25 +55,46 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          docker-compose build
+          docker tag $ECR_REPOSITORY_NGNIX:latest $ECR_REGISTRY/$ECR_REPOSITORY_NGNIX:$IMAGE_TAG
+          docker tag $ECR_REPOSITORY_API:latest $ECR_REGISTRY/$ECR_REPOSITORY_API:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_NGNIX:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_API:$IMAGE_TAG
+          echo "setting output values"
+          echo "::set-output name=appimage::$ECR_REGISTRY/$ECR_REPOSITORY_API:$IMAGE_TAG"
+          echo "::set-output name=webimage::$ECR_REGISTRY/$ECR_REPOSITORY_NGNIX:$IMAGE_TAG"
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@97587c9d45a4930bf0e3da8dd2feb2a463cf4a3a
+      - name: Print the image name
+        run: |
+          echo the images are
+          echo ${{ steps.build-image.outputs.appimage }}
+          echo ${{ steps.build-image.outputs.webimage }}
+
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ secrets.ECS_CONTAINER_DEFINITION }} \
+          --query taskDefinition > task-definition.json    
+          
+      - name: Fill in the new api image ID in the Amazon ECS task definition
+        id: api-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ${{ secrets.ECS_TASK_DEFINITION }}
-          container-name: ${{ secrets.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
+          container-name: ${{ secrets.ECS_API_CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.appimage }}
 
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@de0132cf8cdedb79975c6d42b77eb7ea193cf28e
+      - name: Fill in the new nginx image ID in the Amazon ECS task definition
+        id: ngnix-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          task-definition: ${{ secrets.ECS_TASK_DEFINITION }}
+          container-name: ${{ secrets.ECS_NGINX_CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.webimage }}
+          
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.ngnix-task-def.outputs.task-definition }}
           service: ${{ secrets.ECS_SERVICE }}
           cluster: ${{ secrets.ECS_CLUSTER }}
           wait-for-service-stability: true
