@@ -14,11 +14,11 @@ class Image extends Model
 
     protected $fillable = [
         'url',
-        'product_id'
+        'item_id',
     ];
 
-    public function product(): BelongsTo
+    public function item(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Item::class);
     }
 }
