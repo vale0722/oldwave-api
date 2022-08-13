@@ -6,6 +6,7 @@ use App\Helpers\FilesHelper;
 use App\Models\Image;
 use App\Models\Item;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\File\File;
 
 class StoreOrUpdateItemAction extends Action
@@ -33,8 +34,9 @@ class StoreOrUpdateItemAction extends Action
 
         /** @var File $image */
         $image = $images[0];
+
         $this->model->tumpnail = FilesHelper::resizeImg(
-            'items/tumbnails/',
+            'items/tumbnails/' . $image->hashName(),
             $image
         );
 
