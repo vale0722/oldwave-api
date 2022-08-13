@@ -6,9 +6,9 @@ on:
       - main
 
 env:
-  ECR_REPOSITORY:  ${{ secrets.ECR_REPOSITORY }}
-  
-  
+  ECR_REPOSITORY_API:  ${{ secrets.ECR_REPOSITORY_API }}
+  ECR_REPOSITORY_NGNIX:  ${{ secrets.ECR_REPOSITORY_NGNIX }}
+
 jobs:
   deploy:
     name: Deploy
@@ -36,20 +36,36 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          docker-compose build
+          docker tag $ECR_REPOSITORY_NGNIX:latest $ECR_REGISTRY/$ECR_REPOSITORY_NGNIX:$IMAGE_TAG
+          docker tag $ECR_REPOSITORY_API:latest $ECR_REGISTRY/$ECR_REPOSITORY_API:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_NGNIX:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_API:$IMAGE_TAG
+          echo "setting output values"
+          echo "::set-output name=appimage::$ECR_REGISTRY/$ECR_REPOSITORY_API:$IMAGE_TAG"
+          echo "::set-output name=webimage::$ECR_REGISTRY/$ECR_REPOSITORY_NGNIX:$IMAGE_TAG"
 
-      - name: Fill in the new image ID in the Amazon ECS task definition
+      - name: Print the image name
+        run: |
+          echo the images are
+          echo ${{ steps.build-image.outputs.appimage }}
+          echo ${{ steps.build-image.outputs.webimage }}
+
+      - name: Fill in the new nginx image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@97587c9d45a4930bf0e3da8dd2feb2a463cf4a3a
         with:
           task-definition: ${{ secrets.ECS_TASK_DEFINITION }}
-          container-name: ${{ secrets.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
+          container-name: ${{ secrets.ECS_NGINX_CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.appimage }}
+
+      - name: Fill in the new api image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@97587c9d45a4930bf0e3da8dd2feb2a463cf4a3a
+        with:
+          task-definition: ${{ secrets.ECS_TASK_DEFINITION }}
+          container-name: ${{ secrets.ECS_API_CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.appimage }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@de0132cf8cdedb79975c6d42b77eb7ea193cf28e
