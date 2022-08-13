@@ -5,7 +5,10 @@ on:
     branches:
       - main
 
-
+env:
+  ECR_REPOSITORY: ECR_REPOSITORY  
+  
+  
 jobs:
   deploy:
     name: Deploy
