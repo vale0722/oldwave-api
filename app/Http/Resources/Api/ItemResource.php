@@ -22,6 +22,7 @@ class ItemResource extends JsonResource
             'stock' => $this->stock,
             'category_name' => $this->category->name,
             'category_slug' => $this->category->slug,
+            'category_id' => $this->category->id,
             'seller' => $this->seller->name,
             'seller_logo' => config('filesystems.disks.s3.statics') . '/sellers/' . $this->seller->logo,
             'rating' => 5,

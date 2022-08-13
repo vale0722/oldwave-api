@@ -10,17 +10,15 @@ trait ItemFilter
     {
         $search = $data['search'] ?? null;
         $category = $data['category'] ?? null;
+
         return $query->when(
             $search,
             fn ($query) => $query->where(
-            fn ($query) => $query->nameFilter($search, 'or')
-                ->descriptionFilter($search, 'or')
-                ->brandFilter($search, 'or')
+                fn ($query) => $query->nameFilter($search, 'or')
+                    ->descriptionFilter($search, 'or')
+                    ->brandFilter($search, 'or')
         )
-        )->when(
-            ($category),
-            fn ($query) => $query->categoryFilter($data['category'])
-        )->enabled();
+        )->when($category, fn ($query, $category) => $query->where('category_id', $category))->enabled();
     }
 
     public function scopeNameFilter(Builder $query, ?string $search, ?string $boolean = 'and'): Builder
