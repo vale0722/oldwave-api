@@ -22,12 +22,9 @@ class ItemsApiController extends Controller
         return ItemsResource::collection(Item::filter($request->validated())->paginate(1));
     }
 
-    public function rating(Request $request): array
+    public function rating(): AnonymousResourceCollection
     {
-        return response()->api(
-            Status::OK,
-            ItemsResource::collection(Item::moreVisited()->limit(10)->get())->toArray($request)
-        );
+        return ItemsResource::collection(Item::moreVisited()->limit(10)->get());
     }
 
     public function store(ItemsStoreRequest $request, StoreOrUpdateItemAction $action)

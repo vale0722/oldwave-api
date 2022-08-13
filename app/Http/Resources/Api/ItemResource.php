@@ -3,7 +3,6 @@
 namespace App\Http\Resources\Api;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 
 class ItemResource extends JsonResource
 {
@@ -15,7 +14,7 @@ class ItemResource extends JsonResource
             'brand' => $this->brand,
             'city' => $this->city,
             'price' => $this->price,
-            'tumpnail' => config('filesystems.disks.s3.bucket') . '/'. $this->tumpnail,
+            'tumpnail' => config('filesystems.disks.s3.bucket') . '/' . $this->tumpnail,
             'currency' => $this->currency,
             'discount' => $this->discount,
             'description' => $this->description,
@@ -28,7 +27,7 @@ class ItemResource extends JsonResource
             'createdAt' => $this->created_at->format('Y-m-d h:m:s'),
             'updatedAt' => $this->updated_at->format('Y-m-d h:m:s'),
             'images' => $this->images->map(fn ($image) => [
-                'url' =>  config('filesystems.disks.s3.bucket') . '/'.$image->url,
+                'url' =>  config('filesystems.disks.s3.bucket') . '/' . $image->url,
             ]),
         ];
     }
