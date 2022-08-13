@@ -9,7 +9,7 @@ class CategoryFactory extends Factory
 {
     public function definition(): array
     {
-        $name = $this->faker->firstName();
+        $name = $this->faker->unique()->firstName();
         return [
             'name' => $name,
             'code' => $this->faker->unique()->text(5),
