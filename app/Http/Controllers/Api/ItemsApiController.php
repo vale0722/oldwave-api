@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\StoreOrUpdateItemAction;
 use App\Constants\Status;
 use App\Events\RatingItemEvent;
 use App\Http\Controllers\Controller;
@@ -30,21 +31,14 @@ class ItemsApiController extends Controller
         );
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request, StoreOrUpdateItemAction $action): JsonResponse
     {
-        $item = new Item();
-        $item->name = $request['name'];
-        $item->brand = $request['brand'];
-        $item->price = $request['price'];
-        $item->city = $request['city'];
-        $item->description = $request['description'];
-        $item->discount = $request['discount'];
-        $item->category()->associate($request['id']);
-        $item->seller()->associate($request['id']);
+        $item = $action->setData($request->validated())->execute()->getModel();
 
-        $item->save();
-
-        return ItemsResource::make($item)->response()->setStatusCode(201);
+        return response()->api(
+            Status::OK,
+            ItemResource::make($item)->toArray($request)
+        );
     }
 
     public function show(Request $request, Item $item): ItemsResource
@@ -57,20 +51,16 @@ class ItemsApiController extends Controller
         );
     }
 
-    public function update(Request $request, Item $item): JsonResponse
+    public function update(Request $request, Item $item, StoreOrUpdateItemAction $action): JsonResponse
     {
-        $item->name = $request['name'];
-        $item->brand = $request['brand'];
-        $item->price = $request['price'];
-        $item->city = $request['city'];
-        $item->description = $request['description'];
-        $item->discount = $request['discount'];
-        $item->category()->associate($request['id']);
-        $item->seller()->associate($request['id']);
+        $item = $action->setModel($item)
+            ->setData($request->validated())
+            ->execute()->getModel();
 
-        $item->save();
-
-        return ItemsResource::make($item)->response()->setStatusCode(201);
+        return response()->api(
+            Status::OK,
+            ItemResource::make($item)->toArray($request)
+        );
     }
 
     public function destroy(Item $item): JsonResponse

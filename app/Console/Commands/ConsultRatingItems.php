@@ -2,9 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\RefreshRatingItemsJob;
 use App\Models\RatingItem;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class ConsultRatingItems extends Command
@@ -15,10 +13,10 @@ class ConsultRatingItems extends Command
 
     public function handle()
     {
-        $yesterday = Carbon::yesterday();
-        $ratingItems = RatingItem::where('created_at', '<', $yesterday);
+        $ratingItems = RatingItem::where('created_at', '<', now()->subDay())->get();
+
         foreach ($ratingItems as $ratingItem) {
-            RefreshRatingItemsJob::dispatch($ratingItem);
+            $ratingItem->delete();
         }
     }
 }

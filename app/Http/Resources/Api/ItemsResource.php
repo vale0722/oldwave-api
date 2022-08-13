@@ -15,7 +15,7 @@ class ItemsResource extends JsonResource
             'brand' => $this->brand,
             'city' => $this->city,
             'price' => $this->price,
-            'image' => Storage::url('items/' . $this->tumpnail),
+            'image' => Storage::disk('s3')->path($this->tumpnail),
             'currency' => $this->currency,
             'discount' => $this->discount,
             'description' => $this->description,

@@ -22,10 +22,13 @@ class ItemResource extends JsonResource
             'category_name' => $this->category->name,
             'category_slug' => $this->category->slug,
             'seller' => $this->seller->name,
-            'seller_logo' => Storage::url('sellers/' . $this->seller->logo),
+            'seller_logo' => Storage::disk('s3')->path('sellers/' . $this->seller->logo),
             'rating' => 5,
             'createdAt' => $this->created_at->format('Y-m-d h:m:s'),
             'updatedAt' => $this->updated_at->format('Y-m-d h:m:s'),
+            'images' => $this->images->map(fn ($image) => [
+                'url' => Storage::disk('s3')->path($image->url),
+            ]),
         ];
     }
 }
