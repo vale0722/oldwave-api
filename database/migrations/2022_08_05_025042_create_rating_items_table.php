@@ -7,18 +7,17 @@ use Illuminate\Support\Facades\Schema;
 return new class() extends Migration {
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('rating_items', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 55);
-            $table->string('code', 15)->unique();
-            $table->string('slug', 30)->unique();
-            $table->timestamp('enabled_at')->nullable()->default(now());
+            $table->foreignId('item_id');
+            $table->string('ip')->nullable();
+            $table->string('browser')->nullable();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('rating_items');
     }
 };

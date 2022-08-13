@@ -1,0 +1,47 @@
+[
+    {
+        "name": "Carros",
+        "code":  "001",
+        "slug": "Car"
+    },
+    {
+        "name": "Motos",
+        "code":  "002",
+        "slug": "Moto"
+    },
+    {
+        "name": "Ropa",
+        "code":  "003",
+        "slug": "Shop"
+    },
+    {
+        "name": "Deportes",
+        "code":  "004",
+        "slug": "Sports"
+    },
+    {
+        "name": "Muebles",
+        "code":  "005",
+        "slug": "Furniture"
+    },
+    {
+        "name": "Computadores",
+        "code":  "006",
+        "slug": "PC"
+    },
+    {
+        "name": "Celulares",
+        "code":  "007",
+        "slug": "Phone"
+    },
+    {
+        "name": "TV, audio y foto",
+        "code":  "008",
+        "slug": "TV"
+    },
+    {
+        "name": "Electrodomésticos",
+        "code":  "009",
+        "slug": "HomeAppliances"
+    }
+]
