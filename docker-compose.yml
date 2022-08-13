@@ -3,19 +3,15 @@ version: "3.8"
 networks:
     app-network:
 
-volumes:
-    app-data:
-
 services:
     oldwave-nginx-container:
-        image: nginx:1.21.6-alpine
+        build:
+            context: .docker/nginx
+            dockerfile: Dockerfile
         container_name: oldwave-nginx-container
         restart: unless-stopped
         ports:
             - "80:80"
-        volumes:
-            - ./:/var/www
-            - .docker/nginx:/etc/nginx/conf.d
         networks:
             app-network:
 
@@ -24,8 +20,5 @@ services:
             context: .docker/php
             dockerfile: dockerfile
         container_name: oldwave-api-container
-        volumes:
-            - ./:/var/www
-            - .docker/php/php.ini:/usr/local/etc/php/conf.d/local.ini
         networks:
             app-network:
