@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/*
 
 env:
   ECR_REPOSITORY_API: "oldwave_api"
@@ -73,8 +74,8 @@ jobs:
       - name: Download task definition
         run: |
           aws ecs describe-task-definition --task-definition ${{ secrets.ECS_CONTAINER_DEFINITION }} \
-          --query taskDefinition > task-definition.json    
-          
+          --query taskDefinition > task-definition.json
+
       - name: Fill in the new api image ID in the Amazon ECS task definition
         id: api-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
@@ -90,7 +91,7 @@ jobs:
           task-definition: ${{ secrets.ECS_TASK_DEFINITION }}
           container-name: ${{ secrets.ECS_NGINX_CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.webimage }}
-          
+
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
