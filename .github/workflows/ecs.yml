@@ -6,8 +6,8 @@ on:
       - main
 
 env:
-  ECR_REPOSITORY_API:  ${{ secrets.ECR_REPOSITORY_API }}
-  ECR_REPOSITORY_NGNIX:  ${{ secrets.ECR_REPOSITORY_NGNIX }}
+  ECR_REPOSITORY_API: "oldwave_api"
+  ECR_REPOSITORY_NGNIX: "oldwave_nginx"
 
 jobs:
   deploy:
@@ -71,23 +71,23 @@ jobs:
           echo ${{ steps.build-image.outputs.webimage }}
 
       - name: Fill in the new nginx image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@97587c9d45a4930bf0e3da8dd2feb2a463cf4a3a
+        id: ngnix-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ${{ secrets.ECS_TASK_DEFINITION }}
           container-name: ${{ secrets.ECS_NGINX_CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.appimage }}
 
       - name: Fill in the new api image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@97587c9d45a4930bf0e3da8dd2feb2a463cf4a3a
+        id: api-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ${{ secrets.ECS_TASK_DEFINITION }}
           container-name: ${{ secrets.ECS_API_CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.appimage }}
 
       - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@de0132cf8cdedb79975c6d42b77eb7ea193cf28e
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
           service: ${{ secrets.ECS_SERVICE }}
