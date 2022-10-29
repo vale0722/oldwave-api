@@ -3,7 +3,7 @@ name: Deploy to Amazon ECS
 on:
  push:
    branches:
-     - master
+     - main
      - feature/*
  pull_request:
 
@@ -40,6 +40,9 @@ jobs:
      - name: Copy ENV Laravel Configuration for CI
        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
  
+     - name: Copy dotenv file
+       run: php -r "file_put_contents(__DIR__ . '/.env', '${{ secrets.DOT_ENV_ST }}');"
+        
      - name: Install dependencies
        run: composer install --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
  
@@ -51,7 +54,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: tests
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     environment: production
     steps:
       - name: Checkout
@@ -82,6 +85,9 @@ jobs:
 
       - name: Copy dotenv file
         run: php -r "file_put_contents(__DIR__ . '/.env', '${{ secrets.DOT_ENV }}');"
+        
+      - name: Cat .env file
+        run: cat .env
 
       - name: Login to Amazon ECR
         id: login-ecr
