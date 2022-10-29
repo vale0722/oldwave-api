@@ -2,16 +2,20 @@
 
 namespace Tests\Feature\Items;
 
+use App\Models\Category;
 use App\Models\Item;
 use App\Models\RatingItem;
+use App\Models\Seller;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class IndexItemsTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_the_application_list_items()
+    public function test_the_application_list_items(): void
     {
         Item::factory(5)->create();
 
@@ -24,7 +28,7 @@ class IndexItemsTest extends TestCase
         $this->assertCount(5, $data);
     }
 
-    public function test_the_application_list_only_items_enabled()
+    public function test_the_application_list_only_items_enabled(): void
     {
         Item::factory(3)->create();
         Item::factory(2)->create(['enabled_at' => null]);
@@ -37,7 +41,7 @@ class IndexItemsTest extends TestCase
         $this->assertCount(3, $data);
     }
 
-    public function test_the_application_list_items_and_filter()
+    public function test_the_application_list_items_and_filter(): void
     {
         Item::factory(3)->create();
         Item::factory()->create(['name' => 'Testing Product 123']);
@@ -52,7 +56,7 @@ class IndexItemsTest extends TestCase
         $this->assertCount(1, $data);
     }
 
-    public function test_the_application_list_rating_items()
+    public function test_the_application_list_rating_items(): void
     {
         $itemA = Item::factory()->create();
         $itemB = Item::factory()->create();
