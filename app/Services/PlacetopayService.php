@@ -6,14 +6,15 @@ use App\Constants\TransactionStatuses;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Dnetix\Redirection\Message\RedirectInformation;
+use Dnetix\Redirection\PlacetoPay;
 
 class PlacetopayService implements PaymentServiceContract
 {
-    private PlacetopayServiceContract $service;
+    private PlacetoPay $service;
 
     public function __construct(array $settings)
     {
-        $this->service = app(PlacetopayServiceContract::class, $settings);
+        $this->service = new PlacetoPay($settings);
     }
 
     public function store(Transaction $transaction): Transaction
