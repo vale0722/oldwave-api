@@ -21,12 +21,6 @@ class PlacetopayService implements PaymentServiceContract
         $name = explode(' ', $transaction->name);
         $request = [
             'locale' => 'es_CO',
-            'payer' => [
-                'name' => $name[0],
-                'surname' => $name[1] ?? '',
-                'document' => $transaction->document,
-                'documentType' => $transaction->document_type,
-            ],
             'buyer' => [
                 'name' => $name[0],
                 'surname' => $name[1] ?? '',
@@ -46,6 +40,7 @@ class PlacetopayService implements PaymentServiceContract
 
         try {
             $response = $this->service->request($request);
+
             $transaction->update(
                 $response->isSuccessful()
                     ? ['request_id' => $response->requestId(), 'process_url' => $response->processUrl()]
