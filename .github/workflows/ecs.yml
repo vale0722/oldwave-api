@@ -9,7 +9,6 @@ on:
 
 env:
   ECR_REPOSITORY_API: "oldwave_api"
-  ECR_REPOSITORY_NGNIX: "oldwave_nginx"
 
 jobs:
   tests:
@@ -101,7 +100,9 @@ jobs:
         run: |
           docker-compose build
           docker tag $ECR_REPOSITORY_API:latest $ECR_REGISTRY/$ECR_REPOSITORY_API:$IMAGE_TAG
+          docker tag $ECR_REPOSITORY_API:latest $ECR_REGISTRY/$ECR_REPOSITORY_API:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY_API:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY_API:latest
           echo "setting output values"
           echo "::set-output name=appimage::$ECR_REGISTRY/$ECR_REPOSITORY_API:$IMAGE_TAG"
 
@@ -115,12 +116,13 @@ jobs:
         run: |
           aws ecs describe-task-definition --task-definition ${{ secrets.ECS_CONTAINER_DEFINITION }} \
           --query taskDefinition > task-definition.json
+          ls -la
 
       - name: Fill in the new api image ID in the Amazon ECS task definition
         id: api-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ secrets.ECS_TASK_DEFINITION }}
+          task-definition: task-definition.json
           container-name: ${{ secrets.ECS_API_CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.appimage }}
 
