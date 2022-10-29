@@ -10,6 +10,7 @@ Route::get('items', [ItemsApiController::class, 'index'])->name('items.index');
 Route::get('items/{item:slug}', [ItemsApiController::class, 'show'])->name('items.show');
 Route::post('items', [ItemsApiController::class, 'store'])->name('items.store');
 Route::get('items/rating/all', [ItemsApiController::class, 'rating'])->name('items.rating');
+Route::delete('items/{item}', [ItemsApiController::class, 'destroy'])->name('items.delete');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
