@@ -17,7 +17,7 @@ trait ItemFilter
                 fn ($query) => $query->nameFilter($search, 'or')
                     ->descriptionFilter($search, 'or')
                     ->brandFilter($search, 'or')
-        )
+            )
         )->when($category, fn ($query, $category) => $query->where('category_id', $category))->enabled();
     }
 
