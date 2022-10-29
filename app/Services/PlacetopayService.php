@@ -6,15 +6,14 @@ use App\Constants\TransactionStatuses;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Dnetix\Redirection\Message\RedirectInformation;
-use Dnetix\Redirection\PlacetoPay;
 
 class PlacetopayService implements PaymentServiceContract
 {
-    private PlacetoPay $service;
+    private PlacetopayServiceContract $service;
 
     public function __construct(array $settings)
     {
-        $this->service = new PlacetoPay($settings);
+        $this->service = app(PlacetopayServiceContract::class, $settings);
     }
 
     public function store(Transaction $transaction): Transaction
@@ -22,9 +21,15 @@ class PlacetopayService implements PaymentServiceContract
         $name = explode(' ', $transaction->name);
         $request = [
             'locale' => 'es_CO',
+            'payer' => [
+                'name' => $name[0],
+                'surname' => $name[1] ?? '',
+                'document' => $transaction->document,
+                'documentType' => $transaction->document_type,
+            ],
             'buyer' => [
                 'name' => $name[0],
-                'surname' => $name[1],
+                'surname' => $name[1] ?? '',
                 'document' => $transaction->document,
                 'documentType' => $transaction->document_type,
             ],
@@ -41,7 +46,6 @@ class PlacetopayService implements PaymentServiceContract
 
         try {
             $response = $this->service->request($request);
-
             $transaction->update(
                 $response->isSuccessful()
                     ? ['request_id' => $response->requestId(), 'process_url' => $response->processUrl()]
@@ -59,7 +63,6 @@ class PlacetopayService implements PaymentServiceContract
     {
         /** @var RedirectInformation $response */
         $response = $this->service->query($transaction->request_id);
-
         if ($response->isSuccessful()) {
             if ($response->status()->isApproved()) {
                 $lastPayment = $response->lastTransaction();

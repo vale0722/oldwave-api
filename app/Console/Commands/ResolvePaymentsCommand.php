@@ -31,7 +31,7 @@ class ResolvePaymentsCommand extends Command
         $pendingPayments = Transaction::pendingPayments($time->format(self::DATE_TIME_FORMAT));
 
         foreach ($pendingPayments as $payment) {
-            ProcessPendingPayments::dispatch($payment);
+            ProcessPendingPayments::dispatchSync($payment);
         }
     }
 }

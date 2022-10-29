@@ -25,7 +25,7 @@ class TransactionController extends Controller
         }
 
         return response()->api(Status::OK, [
-            'transaction' => $transaction->with('shoppingCarItems', 'shoppingCarItems.item'),
+            'transaction' => $transaction->load('shoppingCarItems', 'shoppingCarItems.item'),
         ]);
     }
 
@@ -48,6 +48,7 @@ class TransactionController extends Controller
                 'redirect_url' => $transaction->process_url,
             ]);
         } catch (\Throwable $exception) {
+            dd($exception);
             Log::error('error', [
                 $exception,
             ]);
@@ -62,13 +63,12 @@ class TransactionController extends Controller
         try {
             /** @var Transaction $transaction */
             $transaction = $action->setModel($transaction)->query($paymentService)->getModel();
-
             return response()->api(Status::OK, [
                 $transaction->load('shoppingCarItems', 'shoppingCarItems.item'),
             ]);
         } catch (\Throwable $exception) {
             return response()->api(Status::ERROR, [
-        $transaction->load('shoppingCarItems', 'shoppingCarItems.item'),
+                $transaction->load('shoppingCarItems', 'shoppingCarItems.item'),
                 'error' => 'ha ocurrido un error al procesar la transacción',
             ]);
         }

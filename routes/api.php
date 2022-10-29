@@ -22,8 +22,8 @@ Route::middleware(['auth:sanctum', 'cors'])->group(function () {
 });
 
 Route::group(['middleware' => ['cors', 'api']], function () {
-    Route::get('/{driver}/redirect', [AuthController::class, 'redirect']);
-    Route::get('/{driver}/callback', [AuthController::class, 'callback']);
+    Route::get('/{driver}/redirect', [AuthController::class, 'redirect'])->name('api.redirect');
+    Route::get('/{driver}/callback', [AuthController::class, 'callback'])->name('api.callback');
     Route::post('/login', [AuthController::class, 'login'])->name('login.api');
     Route::post('/register', [AuthController::class, 'register'])->name('register.api');
 });

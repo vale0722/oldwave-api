@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Services\PaymentServiceContract;
+use App\Services\PlacetopayServiceContract;
+use Dnetix\Redirection\PlacetoPay;
 use Illuminate\Support\ServiceProvider;
 
 class PaymentServiceProvider extends ServiceProvider
@@ -20,6 +22,10 @@ class PaymentServiceProvider extends ServiceProvider
             $classServices = $settings['class'];
 
             return new $classServices($settings);
+        });
+
+        $this->app->bind(PlacetopayServiceContract::class, function ($app, $settings) {
+            return new PlacetoPay($settings);
         });
     }
 }

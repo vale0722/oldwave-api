@@ -9,7 +9,7 @@ class NotifyUserListener
 {
     public function handle(PaymentUpdated $event): void
     {
-        $user = $event->transaction->user();
+        $user = $event->transaction->user;
         $user->notify(new TransactionResolved($event->transaction));
     }
 }
