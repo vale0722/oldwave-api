@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class StoreOrUpdateItemAction extends Action
 {
+    public ?Item $model = null;
     public function execute(): self
     {
         if (!$this->getModel()) {
