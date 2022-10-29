@@ -51,7 +51,8 @@ return [
             'class' => PlacetopayService::class,
             'login' => env('PTP_LOGIN'),
             'tranKey' => env('PTP_TRANKEY'),
-            'url' => env('PTP_URL'),
+            'baseUrl' => env('PTP_URL'),
         ],
+        'front_url' => env('RETURN_URL_FRONT')
     ],
 ];

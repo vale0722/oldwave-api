@@ -7,13 +7,14 @@ use App\Constants\Status;
 use App\Http\Requests\PaymentRequest;
 use App\Models\Transaction;
 use App\Services\PaymentServiceContract;
+use Illuminate\Support\Facades\Log;
 
 class TransactionController extends Controller
 {
     public function index(): array
     {
-        return $this->api(Status::OK, [
-            'transactions' => auth()->user()->transactions()->with('shopping_car_items', 'shopping_car_items.product')->get(),
+        return response()->api(Status::OK, [
+            'transactions' => auth()->user()->transactions()->with('shoppingCarItems', 'shoppingCarItems.item')->get(),
         ]);
     }
 
@@ -23,8 +24,8 @@ class TransactionController extends Controller
             abort(403);
         }
 
-        return $this->api(Status::OK, [
-            'transaction' => $transaction->with('shopping_car_items', 'shopping_car_items.product'),
+        return response()->api(Status::OK, [
+            'transaction' => $transaction->with('shoppingCarItems', 'shoppingCarItems.item'),
         ]);
     }
 
@@ -43,11 +44,14 @@ class TransactionController extends Controller
                 ->process($paymentService)
                 ->getModel();
 
-            return $this->api(Status::OK, [
+            return response()->api(Status::OK, [
                 'redirect_url' => $transaction->process_url,
             ]);
         } catch (\Throwable $exception) {
-            return $this->api(Status::ERROR, [
+            Log::error('error', [
+                $exception
+            ]);
+            return response()->api(Status::ERROR, [
                 'error' => 'ha ocurrido un error al procesar la transacción',
             ]);
         }
@@ -59,11 +63,12 @@ class TransactionController extends Controller
             /** @var Transaction $transaction */
             $transaction = $action->setModel($transaction)->query($paymentService)->getModel();
 
-            return $this->api(Status::OK, [
-                $transaction->toArray(),
+            return response()->api(Status::OK, [
+                $transaction->load('shoppingCarItems', 'shoppingCarItems.item'),
             ]);
         } catch (\Throwable $exception) {
-            return $this->api(Status::ERROR, [
+            return response()->api(Status::ERROR, [
+		$transaction->load('shoppingCarItems', 'shoppingCarItems.item'),	
                 'error' => 'ha ocurrido un error al procesar la transacción',
             ]);
         }

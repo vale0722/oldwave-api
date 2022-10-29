@@ -17,6 +17,29 @@ class Transaction extends Model
     use HasStatus;
     use TransactionRepository;
 
+    protected $fillable = [
+        'reference',
+        'request_id',
+        'user_id',
+        'status',
+        'reason',
+        'process_url',
+        'receipt',
+        'authorization',
+        'currency',
+        'document_type',
+        'document',
+        'name',
+        'email',
+        'city',
+        'address',
+        'subtotal',
+        'total',
+        'ip',
+        'user_agent',
+        'paid_at'
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

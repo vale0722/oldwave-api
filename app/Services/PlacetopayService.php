@@ -33,7 +33,7 @@ class PlacetopayService implements PaymentServiceContract
                 'amount' => ['currency' => $transaction->currency, 'total' => $transaction->total],
             ],
             'skipResult' => false,
-            'returnUrl' => route('transactions.query', ['reference' => $transaction->reference]),
+            'returnUrl' => str_replace(':transaction', $transaction->reference, config('services.payment_services.front_url')),
             'expiration' => date('c', strtotime('+24 hours')),
             'ipAddress' => $transaction->ip,
             'userAgent' => $transaction->user_agent,
@@ -61,7 +61,6 @@ class PlacetopayService implements PaymentServiceContract
         $response = $this->service->query($transaction->request_id);
 
         if ($response->isSuccessful()) {
-            $attributes['message'] = $response->status()->message();
             if ($response->status()->isApproved()) {
                 $lastPayment = $response->lastTransaction();
                 $transaction->status = TransactionStatuses::APPROVED;
