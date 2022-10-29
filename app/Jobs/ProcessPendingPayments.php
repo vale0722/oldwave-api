@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Actions\TransactionAction;
 use App\Models\Transaction;
-use App\Notifications\TransactionResolved;
 use App\Services\PaymentServiceContract;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -31,7 +30,5 @@ class ProcessPendingPayments implements ShouldQueue
     public function handle(): void
     {
         $this->action->query(app(PaymentServiceContract::class));
-        $user = $this->transaction->user();
-        $user->notify(new TransactionResolved($this->transaction));
     }
 }

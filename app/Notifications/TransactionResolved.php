@@ -4,7 +4,6 @@ namespace App\Notifications;
 
 use App\Models\Transaction;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -43,7 +42,7 @@ class TransactionResolved extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
+        return (new MailMessage())
                     ->line('La transacción ha sido resuelta, el estado es' . $this->transaction->getStatus())
                     ->line('Muchas gracias por utilizar nuestros servicios');
     }

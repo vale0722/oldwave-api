@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Events\PaymentUpdated;
 use App\Models\Item;
 use App\Models\ShoppingCarItem;
 use App\Models\Transaction;
@@ -48,7 +49,7 @@ class TransactionAction extends Action
         try {
             $this->model = $payment->query($this->model);
             if ($this->model->isCompleted()) {
-                PaymentUpdated::dispatch($this);
+                PaymentUpdated::dispatch($this->model);
             }
         } catch (\Throwable $exception) {
             Log::error('Error Process Payment', [

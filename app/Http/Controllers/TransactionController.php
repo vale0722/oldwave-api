@@ -49,7 +49,7 @@ class TransactionController extends Controller
             ]);
         } catch (\Throwable $exception) {
             Log::error('error', [
-                $exception
+                $exception,
             ]);
             return response()->api(Status::ERROR, [
                 'error' => 'ha ocurrido un error al procesar la transacción',
@@ -68,7 +68,7 @@ class TransactionController extends Controller
             ]);
         } catch (\Throwable $exception) {
             return response()->api(Status::ERROR, [
-		$transaction->load('shoppingCarItems', 'shoppingCarItems.item'),	
+        $transaction->load('shoppingCarItems', 'shoppingCarItems.item'),
                 'error' => 'ha ocurrido un error al procesar la transacción',
             ]);
         }

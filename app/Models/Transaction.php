@@ -37,7 +37,7 @@ class Transaction extends Model
         'total',
         'ip',
         'user_agent',
-        'paid_at'
+        'paid_at',
     ];
 
     public function user(): BelongsTo

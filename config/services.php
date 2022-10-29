@@ -53,6 +53,6 @@ return [
             'tranKey' => env('PTP_TRANKEY'),
             'baseUrl' => env('PTP_URL'),
         ],
-        'front_url' => env('RETURN_URL_FRONT')
+        'front_url' => env('RETURN_URL_FRONT'),
     ],
 ];

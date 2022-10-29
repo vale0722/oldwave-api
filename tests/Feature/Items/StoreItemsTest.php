@@ -5,7 +5,6 @@ namespace Tests\Feature\Items;
 use App\Models\Category;
 use App\Models\Seller;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -31,7 +30,7 @@ class StoreItemsTest extends TestCase
             'description' => 'Soy una pruebaaaaaaaaaaaaaaaaaa',
             'seller' => $seller->getKey(),
             'category' => $category->getKey(),
-            'images' => [UploadedFile::fake()->image('product.jpg', 500,250)->size(50)],
+            'images' => [UploadedFile::fake()->image('product.jpg', 500, 250)->size(50)],
         ];
 
         $response = $this->postJson(route('items.store'), $request);

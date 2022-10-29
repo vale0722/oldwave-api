@@ -2,9 +2,7 @@
 
 namespace Tests\Feature\Authentication;
 
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AuthUserTest extends TestCase
@@ -25,7 +23,7 @@ class AuthUserTest extends TestCase
 
         $requestLogin = [
             'email' => 'alejo@gmail.com',
-            'password' => 'testing123!'
+            'password' => 'testing123!',
         ];
 
         $response2 = $this->postJson(route('login.api'), $requestLogin);
