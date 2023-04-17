@@ -52,10 +52,10 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ],
+        "test": "vendor/bin/phpunit --verbose --testdox",
+        "test-ci": "XDEBUG_MODE=coverage vendor/bin/phpunit --stop-on-error --stop-on-failure --testdox --coverage-clover phpunit.coverage.xml --log-junit phpunit.report.xml",
         "phpcs": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php",
-        "phpcs-validate": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php -v --dry-run --stop-on-violation --using-cache=no",
-        "test": "vendor/bin/phpunit tests/",
-        "test-ci": "php -d pcov.enabled=1 -d pcov.directory=. -d pcov.exclude=\"~vendor~\" vendor/bin/phpunit -d memory_limit=512M"
+        "phpcs-validate" : "vendor/bin/php-cs-fixer fix --dry-run --diff"
     },
     "extra": {
         "laravel": {

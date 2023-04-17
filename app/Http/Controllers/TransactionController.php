@@ -8,6 +8,7 @@ use App\Http\Requests\PaymentRequest;
 use App\Models\Transaction;
 use App\Services\PaymentServiceContract;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class TransactionController extends Controller
 {
@@ -29,7 +30,7 @@ class TransactionController extends Controller
         ]);
     }
 
-    public function store(PaymentRequest $request, PaymentServiceContract $paymentService, TransactionAction $action): array
+    public function store(PaymentRequest $request, PaymentServiceContract $service, TransactionAction $action): array
     {
         try {
             /** @var Transaction $transaction */
@@ -41,32 +42,30 @@ class TransactionController extends Controller
                 ]
             ))
                 ->store()
-                ->process($paymentService)
+                ->process($service)
                 ->getModel();
 
             return response()->api(Status::OK, [
                 'redirect_url' => $transaction->process_url,
             ]);
-        } catch (\Throwable $exception) {
-            dd($exception);
-            Log::error('error', [
-                $exception,
-            ]);
+        } catch (Throwable $exception) {
+            Log::error('error', [$exception]);
             return response()->api(Status::ERROR, [
                 'error' => 'ha ocurrido un error al procesar la transacción',
             ]);
         }
     }
 
-    public function query(Transaction $transaction, PaymentServiceContract $paymentService, TransactionAction $action): array
+    public function query(Transaction $transaction, PaymentServiceContract $service, TransactionAction $action): array
     {
         try {
             /** @var Transaction $transaction */
-            $transaction = $action->setModel($transaction)->query($paymentService)->getModel();
+            $transaction = $action->setModel($transaction)->query($service)->getModel();
             return response()->api(Status::OK, [
                 $transaction->load('shoppingCarItems', 'shoppingCarItems.item'),
             ]);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
+            Log::error('error', [$exception]);
             return response()->api(Status::ERROR, [
                 $transaction->load('shoppingCarItems', 'shoppingCarItems.item'),
                 'error' => 'ha ocurrido un error al procesar la transacción',

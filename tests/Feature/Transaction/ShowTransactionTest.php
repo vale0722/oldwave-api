@@ -2,21 +2,12 @@
 
 namespace Tests\Feature\Transaction;
 
-use App\Constants\TransactionStatuses;
-use App\Events\PaymentUpdated;
-use App\Listeners\NotifyUserListener;
 use App\Models\Item;
 use App\Models\ShoppingCarItem;
 use App\Models\Transaction;
 use App\Models\User;
-use App\Services\PlacetopayServiceContract;
-use Dnetix\Redirection\Message\RedirectInformation;
-use Dnetix\Redirection\Message\RedirectResponse;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
-use Mockery;
-use Symfony\Component\Console\Command\Command as CommandAlias;
 use Tests\TestCase;
 
 class ShowTransactionTest extends TestCase

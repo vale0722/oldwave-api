@@ -10,7 +10,7 @@ class FilesHelper
 {
     public static function save(string $path, File $file): string
     {
-        Storage::disk('s3')->put($path, $file);
+        Storage::put($path, $file);
 
         return  $path . '/' . $file->hashName();
     }
@@ -22,7 +22,7 @@ class FilesHelper
         $img->resize(600, null, function ($constraint) {
             $constraint->aspectRatio();
         });
-        Storage::disk('s3')->put($path, $img->stream());
+        Storage::put($path, $img->stream());
         return  $path;
     }
 }
