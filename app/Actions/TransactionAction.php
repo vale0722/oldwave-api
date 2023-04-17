@@ -72,7 +72,10 @@ class TransactionAction extends Action
             $shoppingCarItem->price = $item->price;
             $shoppingCarItem->discount = $item->discount;
             $shoppingCarItem->count = $itemCar['count'];
-            $shoppingCarItem->total = ($shoppingCarItem->price - ($shoppingCarItem->price * $shoppingCarItem->discount)) * $shoppingCarItem->count;
+            $shoppingCarItem->total = (
+                $shoppingCarItem->price
+                - ($shoppingCarItem->price * $shoppingCarItem->discount)
+            ) * $shoppingCarItem->count;
             $total += $shoppingCarItem->total;
             $shoppingCarItem->save();
         }
