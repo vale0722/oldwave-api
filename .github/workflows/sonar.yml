@@ -60,17 +60,13 @@ jobs:
           DB_CONNECTION: sqlite
           DB_DATABASE: database/database.sqlite
         run: composer test-ci
-
-      - name: Excecute phpcs
-        run: composer phpcs-validate
-
       - name: Prepare paths for SonarQube analysis
         run: |
           sed -i "s|$GITHUB_WORKSPACE|/github/workspace|g" phpunit.report.xml
           sed -i "s|$GITHUB_WORKSPACE|/github/workspace|g" phpunit.coverage.xml
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+      - name: Excecute phpcs
+        run: composer phpcs-validate
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
